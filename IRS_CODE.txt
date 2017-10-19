@@ -1,0 +1,82 @@
+import os
+import re
+import sys
+import math
+#sys.stdout=open('f2.txt','w')
+from collections import Counter
+from glob import iglob
+
+def cleantext(data):
+    data=re.sub(r'\W+',' ',data)
+    data=data.lower()
+    return data
+
+myfiledirectory='/home/vkt/transcripts/'
+counter=Counter()
+for filename in iglob(os.path.join(myfiledirectory,'*.txt')):
+    with open(filename,'r') as completetext:
+        counter.update(cleantext(completetext.read()).split())
+
+
+#number of word tokens in data
+
+
+total_word_count_sum=sum(counter.values())
+
+print('number of word tokens in dataset:',format(total_word_count_sum))
+
+#Average number of word tokens per document
+filename_cnt=0
+for filename in iglob(os.path.join(myfiledirectory,'*.txt')):
+    filename_cnt+=1
+print('Average number of word tokens per document:',round(sum(counter.values())/filename_cnt,5))
+   
+
+#number of unique word tokens in data
+total_unique_word_cnt=0
+for word,count in counter.most_common():
+     total_unique_word_cnt += word.count(word)
+print('number of unique words in dataset:',total_unique_word_cnt)
+
+#number of words that occur only once
+increment_count=0
+for x in counter.values():
+        if x == 1:
+            increment_count+=1
+        else:
+            0
+print('number of words that occur only once in dataset:',increment_count)
+
+#30 most frequent words in dataset with their tf,idf,tf*idf and probability
+
+filename_cnt=0
+for filename in iglob(os.path.join(myfiledirectory,'*.txt')):
+    filename_cnt+=1
+
+myfiledirectory='/home/vkt/transcripts/'
+counter=Counter()
+
+print('word'"\t"'tf'"\t"'idf'"\t"'tf*idf'"\t"'probability')
+
+for filename in iglob(os.path.join(myfiledirectory,'*.txt')):
+    with open(filename,'r') as completetext:
+        counter.update(cleantext(completetext.read()).split())
+        
+for word,count in counter.most_common(30):
+    word_name=word
+    term_frequency=count
+
+    myfiledirectory='/home/vkt/transcripts/'
+    counter=Counter()
+    for filename in iglob(os.path.join(myfiledirectory,'*.txt')):
+        with open(filename,'r') as completetext:
+             words = set(cleantext(completetext.read()).split())
+             counter.update(words)
+    for word1,count1 in counter.most_common():
+        if word1 == word:
+            top_30_word=word
+            top_30_word_dcmt_cnt=count1
+        else:
+            continue
+    print(word,"\t",term_frequency,"\t",round(math.log(filename_cnt/top_30_word_dcmt_cnt),3),"\t",round(term_frequency*round(math.log(filename_cnt/top_30_word_dcmt_cnt),3),3),"\t",round(float(term_frequency/total_word_count_sum),5))
+#log(number of documents/number of documents wheret term t appears)

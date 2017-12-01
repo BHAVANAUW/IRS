@@ -1,0 +1,116 @@
+import numpy as py
+
+import pandas as ds
+import numpy
+
+import numpy.matlib as npm
+
+input = []
+
+with open('/home/Desktop/graph.txt','r') as m:
+   
+     for l in m:
+     
+         input.append(l.split())
+ 
+
+value = ds.DataFrame(input,cls = ['rw','clm','var'])
+
+value_i = value.set_index(['rw','clm']).unstack('clm')
+
+A = py.array(value_i.values,dtype=float)
+
+
+
+class Ranking:
+   
+        
+       
+    
+    
+      def __init__(self, d=0.85, error=0.001):
+
+          self.d = 0.85
+          self.error = 0.001
+
+
+    
+  def space(self, val1, val2):
+
+          val = val1 - val2
+
+          return py.sum(val)
+
+      def determine(self,A):
+
+          node = len(A)
+
+          in=py.zeros(node)
+
+          for n in range(node):
+ 
+              for m in range(node):
+  
+                if (A[m, n] == 1):
+  
+                    in[n] += 1
+
+          rank = py.full((node, 1), 1/node)
+
+          raw = rank
+          print(rank)
+  
+        matrix = py.zeros((node, node), dtype=py.float)
+ 
+        for n in range(node):
+
+             for m in range(node):
+
+                 if A[m, n] == 1:
+ 
+                    matrix[m, n] = 1.0 / in[n]
+
+         print(matrix)
+
+         matrix = py.asmatrix(matrix)
+
+
+         e= py.matlib.ones((node,1),dtype=py.int)
+
+        
+ temp = (1.0 - self.d) * e / (node)
+
+         temp1 = self.d * matrix
+ 
+        
+f = (temp1 * rank)
+
+       
+  temp1 = py.asmatrix(temp1)
+
+         rank = py.asmatrix(rank)
+
+         temp = py.asmatrix(temp)
+
+         raw = py.asmatrix(raw)
+
+         condition= False         
+         c = 0
+
+         while(condition == False):
+               raw= ( temp1* rank) + temp
+               if(py.sum(py.abs(raw - rank)) > self.error):
+                  condition = False
+                  rank = raw
+               else:
+                  condition = True
+               c = c + 1 
+         print(raw)
+         print(" iterations" , c)     
+
+
+temp1 = Ranking()
+
+x = temp1.determine(A)
+
+print(x)

@@ -28,10 +28,10 @@ class Ranking:
        
     
     
-      def __init__(self, d=0.85, error=0.001):
+      def __init__(self, d=0.85, error=0.0001):
 
           self.d = 0.85
-          self.error = 0.001
+          self.error = 0.0001
 
 
     
